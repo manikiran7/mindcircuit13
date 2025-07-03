@@ -36,16 +36,10 @@ pipeline
 
                 withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIAL}", usernameVariable: 'DOCKERUSER', passwordVariable: 'DOCKERPASS')]) {
                     sh """
-                    # Remove all old images with same name except the current tag (cleanup before build)
                     docker images | grep ${DOCKER_IMAGE} | awk '{print \$3}' | xargs -r docker rmi -f || true
-
-                    # Build and push the new image
                     docker build -t ${DOCKER_IMAGE}:${tag} .
                     echo \$DOCKERPASS | docker login -u \$DOCKERUSER --password-stdin
                     docker push ${DOCKER_IMAGE}:${tag}
-
-                    # Optional: Prune dangling images
-                    docker image prune -f || true
                     """
                 }
             }
