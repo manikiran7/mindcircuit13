@@ -1,26 +1,60 @@
-pipeline {
-    agent any
+pipeline
+{
+          agent any
+          tools {
+                    maven 'Maven3'
+          }
+          environment {
+                    SONARQUBE_ENV = 'mysonarqube'
+                    DOCKER_IMAGE = 'manikiran7/firstrepo'
+                    DOCKER_CREDENTIAL = 'dockerhub-creds'          }
+          stages {
+          stage('Checkout') {
+               steps {
+                    git branch: 'main', url: 'https://github.com/manikiran7/Jenkins-Zero-To-Hero.git'
+               }
+          }
+          stage('Code Qulaity Check') {
+                         steps {
+                    dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
+                         withSonarQubeEnv("${SONARQUBE_ENV}") {
+                                        sh 'mvn clean verify sonar:sonar'
+                         }
+                    }
+                         }
+          }
+          stage('Maven Builds') {
+               steps {
+                    dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
+                         sh  'mvn clean package -Dskipstests'
+                    }
+               }
+          }
+          
+          
+          stage('Docker Build & Push image'){
+          steps {
+                    dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
+                     script {
+                    def tag = "${BUILD_NUMBER}"
+                     withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIAL}", usernameVariable: 'DOCKERUSER', passwordVariable: 'DOCKERPASS')]) {
+                    sh """
+                    docker build -t ${DOCKER_IMAGE}:${tag} .
+                    echo \$DOCKERPASS | docker login -u \$DOCKERUSER --password-stdin
+                    docker push ${DOCKER_IMAGE}:${tag}
+                         """
+                    }
+               }
+          }
+     }
 
-    stages {
-        stage('CLONE SCM') {
-            steps {
-                echo 'Cloning Mc-app project code'
-				git branch: 'main', url: 'https://github.com/devopstraininghub/mindcircuit13.git'
-            }
-        }
-		
-		stage('Build Artifact ') {
-            steps {
-                echo 'generating artifact with maven build tool'
-				sh 'mvn clean install'
-            }
-        }
-		
-		stage('Deploy to tomcat') {
-            steps {
-                echo 'Deploying artifact to tomcat webserver '
-				deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '', url: 'http://52.201.234.58:8091/')], contextPath: 'facebook-app', war: '**/*.war'
-            }
-        }
-    }
+     }
+}
+
+ 
+          post {
+     always {
+          cleanWs()
+          }
+     }
 }
