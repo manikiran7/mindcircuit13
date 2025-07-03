@@ -11,7 +11,7 @@ pipeline
           stages {
           stage('Checkout') {
                steps {
-                    git branch: 'main', url: 'https://github.com/manikiran7/Jenkins-Zero-To-Hero.git'
+                    git branch: 'main', url: 'https://github.com/manikiran7/mindcircuit13.git'
                }
           }
           stage('Code Qulaity Check') {
