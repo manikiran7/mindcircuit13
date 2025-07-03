@@ -1,6 +1,6 @@
 ##artifact build stage
 FROM maven AS buildstage
-RUN mkdir /opt/mindcircuit13
+RUN mkdir /opt/manikiran
 WORKDIR /opt/manikiran
 COPY . .
 RUN mvn clean install    ## artifact -- .war
