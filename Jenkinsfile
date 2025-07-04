@@ -54,7 +54,7 @@ pipeline {
                         sed -i 's|image:.*|image: ${image}|' deploymentfiles/deployment.yml
                         git config user.email "jenkins@example.com"
                         git config user.name "jenkins"
-                        git add k8s/deployment.yaml
+                        git add deploymentfiles/deployment.yml
                         git commit -m "Update image to ${image}"
                         git push origin main
                         """
