@@ -4,3 +4,10 @@ alertmanager:
 server:
   service:
     type: ClusterIP
+
+prometheus:
+  prometheusSpec:
+    additionalScrapeConfigs:
+      - job_name: 'java-app'
+        static_configs:
+          - targets: ['http://13.222.232.13:30238']
