@@ -1,0 +1,6 @@
+alertmanager:
+  enabled: false
+
+server:
+  service:
+    type: ClusterIP
