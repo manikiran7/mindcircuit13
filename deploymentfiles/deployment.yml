@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: mc-app
-        image: image: manikiran7/app:old-tag
+        image: manikiran7/firstrepo:10
         ports:
         - containerPort: 8080
 
