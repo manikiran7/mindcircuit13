@@ -51,7 +51,7 @@ pipeline {
                         rm -rf mindcircuit13
                         git clone https://${GIT_USER}:${GIT_PASS}@github.com/manikiran7/mindcircuit13.git
                         cd mindcircuit13
-                        sed -i 's|image:.*|image: ${image}|' k8s/deployment.yaml
+                        sed -i 's|image:.*|image: ${image}|' deploymentfiles/deployment.yaml
                         git config user.email "jenkins@example.com"
                         git config user.name "jenkins"
                         git add k8s/deployment.yaml
