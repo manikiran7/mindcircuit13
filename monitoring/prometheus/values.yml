@@ -10,4 +10,4 @@ prometheus:
     additionalScrapeConfigs:
       - job_name: 'java-app'
         static_configs:
-          - targets: ['http://13.222.232.13:30238']
+          - targets: ['13.222.232.13:30238']
